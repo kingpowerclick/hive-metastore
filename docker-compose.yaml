@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+  hive-metastore:
+    build:
+      context: .
+    ports:
+      - 9083:9083
+    volumes:
+      - ./conf:/opt/hive/conf
+    restart: unless-stopped
+  db:
+    image: postgres:9.6.18
+    restart: unless-stopped
+    ports:
+      - 5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: metastore_db
+    volumes:
+      - postgres_data:/var/lib/postgres
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 8080:80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_LISTEN_PORT: 80
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+volumes:
+  postgres_data:
+  pgadmin: {}
+
+
